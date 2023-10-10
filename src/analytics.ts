@@ -22,8 +22,12 @@ export class Analytics {
         )
     }
 
-    public static setAttributes({ country, user_language, device_language, device_type }: AttributesTypes)
-    {
+    public static setAttributes({
+                                    country,
+                                    user_language,
+                                    device_language,
+                                    device_type,
+                                }: AttributesTypes) {
         this._growthbook.setAttributes({
             id: Analytics.getId(),
             country,
@@ -33,11 +37,11 @@ export class Analytics {
         })
     }
 
-    public static getFeatureIsOn(id: string) {
-        return Analytics._growthbook.getFeatureIsOn(id)
+    public static getFeatureState(id: string) {
+        return Analytics._growthbook.getFeatureState(id)
     }
-    public static getFeatureValue(id: string, fallback: string) {
-        return Analytics._growthbook.getFeatureValue(id, fallback)
+    public static getFeatureValue(id: string) {
+        return Analytics._growthbook.getFeatureValue(id)
     }
 
     public static getId() {
@@ -47,12 +51,13 @@ export class Analytics {
     public static registerAnalyticsEvent = <T extends keyof TEvents>(
         event: keyof TEvents,
         form_source: string,
+        form_name: string,
     ) => {
         const analytic_events = {
             [event]: (action: ActionForEvent<T>, signup_provider?: SignupProvider) => {
                 this._rudderstack.track(
                     event,
-                    { action, signup_provider, form_source },
+                    { action, signup_provider, form_source, form_name },
                     { is_anonymous: !!this._rudderstack.getAnonymousId() },
                 )
             },
