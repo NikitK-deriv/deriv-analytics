@@ -16,12 +16,12 @@ export class Growthbook {
     private static _instance: Growthbook
 
     // we have to pass settings due the specific framework implementation
-    constructor(clientKey: string, decryptionKey: string) {
+    constructor(clientKey: string, decryptionKey: string, enableDevMode: boolean) {
         this.GrowthBook = new GrowthBook<GrowthBook>({
             apiHost: 'https://cdn.growthbook.io',
             clientKey: clientKey,
             decryptionKey: decryptionKey,
-            enableDevMode: true,
+            enableDevMode,
             subscribeToChanges: true,
             trackingCallback: (experiment, result) => {
                 RudderAnalytics.track('experiment_viewed', {
@@ -40,10 +40,11 @@ export class Growthbook {
     // for make instance by singleton
     public static getGrowthBookInstance(
         clientKey: string,
-        decryptionKey: string
+        decryptionKey: string,
+        enableDevMode: boolean
     ) {
         if (!Growthbook._instance) {
-            Growthbook._instance = new Growthbook(clientKey, decryptionKey)
+            Growthbook._instance = new Growthbook(clientKey, decryptionKey, enableDevMode)
             return Growthbook._instance
         }
         return Growthbook._instance
