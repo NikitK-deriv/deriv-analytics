@@ -16,12 +16,11 @@ export class Growthbook {
     private static _instance: Growthbook
 
     // we have to pass settings due the specific framework implementation
-    constructor(clientKey: string, decryptionKey: string, NODE_ENV: string) {
+    constructor(clientKey: string, decryptionKey: string) {
         this.GrowthBook = new GrowthBook<GrowthBook>({
             apiHost: 'https://cdn.growthbook.io',
             clientKey: clientKey,
             decryptionKey: decryptionKey,
-            // enableDevMode: process.env.NODE_ENV !== 'production',
             enableDevMode: true,
             subscribeToChanges: true,
             trackingCallback: (experiment, result) => {
@@ -41,11 +40,10 @@ export class Growthbook {
     // for make instance by singleton
     public static getGrowthBookInstance(
         clientKey: string,
-        decryptionKey: string,
-        NODE_ENV: string,
+        decryptionKey: string
     ) {
         if (!Growthbook._instance) {
-            Growthbook._instance = new Growthbook(clientKey, decryptionKey, NODE_ENV)
+            Growthbook._instance = new Growthbook(clientKey, decryptionKey)
             return Growthbook._instance
         }
         return Growthbook._instance
@@ -67,6 +65,6 @@ export class Growthbook {
         return this.GrowthBook.getFeatureValue(key, 'fallback')
     }
     init() {
-        this.GrowthBook.loadFeatures().catch((err) => console.error(err))
+        return this.GrowthBook.loadFeatures().catch((err) => console.error(err))
     }
 }
